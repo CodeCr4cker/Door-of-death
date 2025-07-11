@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Double Door Animation with Login</title>
+  <style>
+    body, html {
+      /* padding-left: 15rem; */
+      height: 100vh;
+      margin: 0;
+      background-color: #000000;
+    /*   overflow: hidden; */
+    /*  font-family: chiller; */ 
+    }
+    .door-container {
+      width: 400px;
+  height: 300px;
+  position: absolute; /* Changed from relative to absolute for centering */
+  top: 7rem; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjusts to center accurately */
+  perspective: 1000px;
+    }
+    .door {
+      /* padding-left: 15rem; */
+      width: 50%;
+      height: 50rem;
+      position: absolute;
+      background-color: #A0522D;
+      transition: transform 1s ease;
+      transform-origin: left;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .left-door {
+      left: 0;
+      transform-origin: left center;
+      border-top-left-radius: 20rem;
+    }
+    .right-door {
+      right: 0;
+      transform-origin: right center;
+      border-top-right-radius: 20rem;
+    }
+    .open-left {
+      transform: rotateY(-90deg);
+    }
+    .open-right {
+      transform: rotateY(90deg);
+    }
+    .door-content {
+
+      /* padding-left: 15rem; */
+      background-image: url(https://images.wallpaperscraft.com/image/single/starry_sky_milky_way_night_124665_1366x768.jpg);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 2rem;
+      z-index: -1;
+      
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .door-container.opened .door-content {
+      opacity: 1;
+      cursor: pointer;
+    }
+    .gateman {
+      margin-top: 5rem;
+      position: absolute;
+      top: 8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30rem;
+      z-index: 5;
+      cursor: pointer;
+      transition: opacity 1s ease;
+    }
+    .door-container.opened .gateman {
+      opacity: 0;
+    }
+    .login-container {
+      padding: 20px;
+      margin-top: 12rem;
+      border-radius: 8px;
+      text-align: center;
+      width: 300px;
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      color: white;
+      display: none;
+    }
+    h4 {
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      color: red;
+      font-family: chiller;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 5rem;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #message {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .flash {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .hidden-content {
+      width: 0;
+      height: 100vh;
+      background-image: url(https://images.wallpaperscraft.com/image/single/starry_sky_milky_way_night_124665_1366x768.jpg);
+      background-size: cover;
+      /* color: rgb(175, 18, 18); */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      overflow: hidden;
+      /* transition: width 1s ease; */
+    }
+    .main{
+      padding-left: 15rem;
+    }
+    .cover1{
+      /* background-image: url(6.jpeg); */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 2rem;
+
+             }
+    .hidden-content.expanded {
+      width: 100%;
+    }
+/* book part start */
+.itz-me {
+            height: 37rem;
+            border-radius: 2rem;
+        }
+
+        .book {
+            padding-left: 2.5rem;
+            margin-top: 50rem;
+            margin-bottom: 40rem;
+        }
+
+        .cover {
+            overflow: hidden;
+            z-index: -4;
+            width: 390px;
+            height: 639px;
+        }
+
+        .flipbook {
+            margin: 3em auto;
+            width: 700px;
+            height: 600px;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .flipbook .leaf {
+            position: absolute;
+            transform-style: preserve-3d;
+            height: 100%;
+            width: 50%;
+            background-color: #fff;
+            left: 50%;
+            transition: transform 1s;
+            transform: rotate3d(0, 1, 0, 0deg);
+            transform-origin: left 0px;
+        }
+
+        .flipbook .leaf .page {
+            transform-style: preserve-3d;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+        }
+
+        .flipbook .leaf .page.front {
+            transform: rotate3d(0, 1, 0, 0deg) translate3d(0, 0, 0.1px);
+        }
+
+        .flipbook .leaf .page.back {
+            transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, 0.1px);
+        }
+
+        .pageNumber {
+            font-size: 0.95em;
+            position: absolute;
+            bottom: 0.5em;
+        }
+
+        .front .pageNumber {
+            right: 0.75em;
+        }
+
+        .back .pageNumber {
+            left: 0.75em;
+        }
+
+        h1, h2, h3 {
+            font-family: cursive;
+        }
+        
+    #question{
+      font-family: chiller;
+      
+    }
+    .flipbook {
+  animation: up-down 1s ease-in-out infinite;
+  
+}
+        @keyframes up-down {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); /* Move up */
+  }
+  100% {
+    transform: translateY(0); /* Move back down */
+  }
+        }
+
+/* about hide part */
+
+  /* Initial hidden state for the div */
+        .hidden {
+            display: none;
+        }
+
+        /* Style for the div when it's shown */
+        #aboutDiv {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        /* Animation when the div becomes visible */
+        #aboutDiv.visible {
+            opacity: 1;
+            /* transform: translateY(0); */
+        }
+
+
+  </style>
+</head>
+<body>
+  <a href="#" id="aboutLink">About</a>
+
+  <div id="aboutDiv" class="hidden">
+<div class="door-container">
+  <div class="door left-door"><img src="https://github.com/Divyanshu-85/Required-Document/blob/main/2.jpg?raw=true" class="cover1"></div>
+  <div class="door right-door"><img src="https://github.com/Divyanshu-85/Required-Document/blob/main/1.jpg?raw=true" class="cover1"></div>
+  <img src="https://github.com/Divyanshu-85/Required-Document/blob/main/gatemen.png?raw=true" alt="Gateman" class="gateman" id="gateman">
+  <div class="door-content" id="doorContent">
+    Welcome to the Hidden World!
+  </div>
+</div>
+<div class="main">
+<div class="login-container" id="loginForm">
+  <h4>I am Devil</h4>
+  <p id="question"></p>
+  <input type="text" id="answer" placeholder="Enter your answer" required>
+  <button onclick="checkAnswer()">Submit</button>
+  <p id="message"></p>
+</div>
+
+<div class="flash" id="flashEffect"></div>
+
+
+<div class="hidden-content" id="hiddenContent">
+
+  <div class="bookbox">
+    <div class="book">
+        <div class="flipbook centered" id="flipbook">
+            <div class="leaf">
+                <div class="page front title external" style="background-color:#8d99ae; display: flex; align-items: center; justify-content: center;">
+                    <h1 style="font-size: 2em; color: #fff;"><img src="https://github.com/Divyanshu-85/Required-Document/blob/main/front.jpg?raw=true" class="cover"></h1>
+                </div>
+                <div class="page back" style="background-color:#2a9d8f;">
+                    <div class="pageNumber">i</div>
+                    <img src="https://github.com/Divyanshu-85/Required-Document/blob/main/IMG_20241013_124219.jpg?raw=true1" class="itz-me" alt="" style="width:102%">
+                </div>
+            </div>
+            <div class="leaf">
+                <div class="page front" style="background-color:#2a9d8f;">
+                    <div class="pageNumber">ii</div>
+                    <h2>Contents</h2>
+                    <div class="contents-row">
+                        <div class="text">Introduction</div>
+                        <div class="spacer"></div>
+                        <div class="text">1</div>
+                    </div>
+                    <div class="contents-row">
+                        <div class="text">Passion</div>
+                        <div class="spacer"></div>
+                        <div class="text">3</div>
+                    </div>
+                </div>
+                <div class="page back" style="background-color:#e9c46a;">
+                    <div class="pageNumber">1</div>
+                    <h2>Introduction</h2>
+                    <p>Hello! My name is Divyanshu Pandey, and I’m excited to introduce myself. I am 16 years old and currently live in Naini Prayagraj. I have a background in programming and coding, and I’m passionate about it.</p>
+                    <h1>Shayari</h1>
+                    <p>प्रोग्रामिंग का जादू, समझ पाना है मुश्किल।<br>कोड के हर अल्गोरिदम में, छिपा है एक नज़दीक सफर का सिलसिला।</p>
+                </div>
+            </div>
+            <div class="leaf">
+                <div class="page front" style="background-color:#e9c46a;">
+                    <div class="pageNumber">2</div>
+                </div>
+                <div class="page back" style="background-color:#f4a261;">
+                    <div class="pageNumber">3</div>
+                    <h2>Passion</h2>
+                    <p>कोड लिखते हैं जब हम, जैसे रचते हैं कोई गीत,<br>हर सिम्पल फंक्शन में छुपा है एक गहरा मीत।</p>
+                    <br>
+                    <p>Signature....<br>Divyanshu</p>
+                </div>
+                <div class="page back external" style="background-color:#8d99ae; display: flex; align-items: center; justify-content: center;">
+                    <h1 style="font-size: 2em; color: #fff;"><img src="https://github.com/Divyanshu-85/Required-Document/blob/main/back.jpg?raw=true" class="cover"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+</div>
+</div>
+<script>
+  let userName = "";
+  let doorsOpened = false;
+  const questions = [
+    { question: "Who are you, What is your name?", answer: "" },
+    { question: "{name}, Why you have came here?", answer: "For Reading The Book" },
+    { question: "{name}, ok but for Reading the book solve the riddle", answer: "OK" },
+    { question: "{name}, Ek aisi kitaab hai jise khol kar padho to aapko sab kuch samajh aa jata hai, par jab band karte ho toh sab bhool jate ho. Wo kya hai?", answer: "Dreams" }
+  ];
+  
+  let currentQuestionIndex = 0;
+  const questionElement = document.getElementById("question");
+
+  function displayQuestion() {
+    let questionText = questions[currentQuestionIndex].question.replace("{name}", userName);
+    let i = 0;
+    questionElement.textContent = ""; // Clear question element
+    
+    function typeWriter() {
+      if (i < questionText.length) {
+        questionElement.textContent += questionText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50); // Speed of typing effect
+      }
+    }
+    typeWriter();
+  }
+
+  function openDoors() {
+    const doorContainer = document.querySelector('.door-container');
+    const leftDoor = document.querySelector('.left-door');
+    const rightDoor = document.querySelector('.right-door');
+    
+    leftDoor.classList.add('open-left');
+    rightDoor.classList.add('open-right');
+    doorContainer.classList.add('opened');
+    doorsOpened = true;
+  }
+
+  function checkAnswer() {
+    const userAnswer = document.getElementById("answer").value.trim();
+    const messageElement = document.getElementById("message");
+    
+    if (currentQuestionIndex === 0) {
+      userName = userAnswer;
+      currentQuestionIndex++;
+      document.getElementById("answer").value = "";
+      displayQuestion();
+      return;
+    }
+    
+    if (currentQuestionIndex === questions.length - 1) {
+      if (userAnswer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+        messageElement.style.color = "green";
+        messageElement.textContent = "Correct answer. Access Granted!";
+        setTimeout(() => {
+          openDoors();
+          document.querySelector('.login-container').style.display = 'none';
+        }, 500);
+      } else {
+        messageElement.style.color = "red";
+        messageElement.textContent = "Incorrect answer. Access Denied!";
+      }
+    } else {
+      const correctAnswer = questions[currentQuestionIndex].answer;
+        
+      if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        currentQuestionIndex++;
+        document.getElementById("answer").value = "";
+        displayQuestion();
+        messageElement.textContent = "";
+      } else {
+        messageElement.style.color = "red";
+        messageElement.textContent = "Incorrect answer. Try again!";
+      }
+    }
+  }
+  
+  document.getElementById("gateman").addEventListener("click", () => {
+    if (!doorsOpened) {
+      document.getElementById("loginForm").style.display = 'block';
+      displayQuestion(); // Start typing effect when login form becomes visible
+    }
+  });
+
+  document.getElementById("doorContent").addEventListener("click", () => {
+    if (doorsOpened) {
+      const flashEffect = document.getElementById("flashEffect");
+      const hiddenContent = document.getElementById("hiddenContent");
+      
+      flashEffect.style.opacity = "1";
+      setTimeout(() => {
+        flashEffect.style.opacity = "0";
+        document.querySelector('.door-container').style.display = 'none';
+        hiddenContent.classList.add("expanded");
+      }, 500);
+    }
+  });
+
+
+//   book area
+
+document.addEventListener("DOMContentLoaded", function() {
+            new FlipBook(document.getElementById("flipbook"));
+        });
+
+        class FlipBook {
+            constructor(bookElem) {
+                this.elems = {
+                    book: bookElem,
+                    leaves: bookElem.querySelectorAll(".leaf")
+                };
+                this.currentPagePosition = 0;
+                this.setupEvents();
+                this.turnPage(0);
+            }
+
+            setPagePosition(page, position, index) {
+                let transform = `translate3d(0,0,${(position < 0 ? 1 : -1) * Math.abs(index)}px)`;
+                if (position < 0) {
+                    transform += " rotate3d(0, 1, 0, -180deg)";
+                    page.classList.add("turned");
+                } else {
+                    page.classList.remove("turned");
+                }
+                page.style.transform = transform;
+            }
+
+            turnPage(delta) {
+                this.currentPagePosition += delta;
+                if (this.currentPagePosition < 0) {
+                    this.currentPagePosition = 0;
+                    return;
+                }
+                if (this.currentPagePosition > this.elems.leaves.length) {
+                    this.currentPagePosition = this.elems.leaves.length;
+                    return;
+                }
+                this.elems.leaves.forEach((page, index) => {
+                    const pageNumber = index;
+                    this.setPagePosition(page, pageNumber - this.currentPagePosition, index);
+                });
+            }
+
+            setupEvents() {
+                this.elems.leaves.forEach((leaf, index) => {
+                    leaf.addEventListener("click", () => {
+                        if (index >= this.currentPagePosition) {
+                            this.turnPage(1);
+                        } else {
+                            this.turnPage(-1);
+                        }
+                    });
+                });
+            }
+        }
+// hide with about
+ // Get references to the link and the div
+ const aboutLink = document.getElementById('aboutLink');
+        const aboutDiv = document.getElementById('aboutDiv');
+
+        // Add click event listener to the "About" link
+        aboutLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            if (aboutDiv.classList.contains('visible')) {
+                // If the div is visible, hide it
+                aboutDiv.classList.remove('visible');
+                setTimeout(() => aboutDiv.classList.add('hidden'), 500); // Delay hiding after animation
+            } else {
+                // If the div is hidden, show it
+                aboutDiv.classList.remove('hidden');
+                setTimeout(() => aboutDiv.classList.add('visible'), 10); // Trigger animation
+            }
+        });
+
+</script>
+
+</body>
+</html>
